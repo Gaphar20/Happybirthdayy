@@ -22,6 +22,7 @@ export const WishForm: React.FC<WishFormProps> = ({ onWishSubmitted }) => {
   const relationshipOptions = [
     'Son',
     'Daughter',
+    'Wife',
     'Grandchild',
     'Sister',
     'Brother',
