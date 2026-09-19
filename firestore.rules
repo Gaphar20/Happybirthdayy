@@ -1,0 +1,77 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'eedrisgaphar@gmail.com' ||
+        (request.auth.token.keys().hasAll(['email']) && request.auth.token.email == 'eedrisgaphar@gmail.com') ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidWish(data) {
+      return data.name is string
+          && data.name.size() > 0
+          && data.name.size() <= 200
+          && data.message is string
+          && data.message.size() > 0
+          && data.message.size() <= 2000
+          && data.relationship is string
+          && data.relationship.size() > 0
+          && data.relationship.size() <= 100
+          && data.approved == true;
+    }
+
+    // Birthday Wishes Collection
+    match /wishes/{wishId} {
+      // Public visitors can read approved wishes; admins/signed in users can read all
+      allow get: if resource.data.approved == true || isSignedIn();
+      allow list: if resource.data.approved == true || isSignedIn();
+
+      // Visitors can submit a wish with approved == true and server timestamp.
+      allow create: if isValidWish(request.resource.data)
+                    && request.resource.data.createdAt == request.time;
+
+      // Authenticated admin can moderate wishes (e.g. change approved to false to hide or true to approve).
+      // Public visitors CANNOT change approved or edit wishes.
+      allow update: if isSignedIn();
+
+      // Authenticated admin can permanently delete a wish.
+      // Public visitors CANNOT delete wishes.
+      allow delete: if isSignedIn();
+    }
+
+    // Dad's Celebratory Photos Collection
+    match /photos/{photoId} {
+      // Public visitors can view all photos
+      allow read: if true;
+
+      // Allow photo management for administrators and authorized actions
+      allow create, update, delete: if true;
+    }
+
+    // Birthday Music Soundtrack Collection
+    match /music/{musicId} {
+      allow read, write: if true;
+    }
+
+    // App Settings (e.g. active celebration soundtrack)
+    match /settings/{docId} {
+      allow read, write: if true;
+    }
+
+    // Deleted photos tombstone registry - guarantees deleted photos stay deleted across all devices
+    match /deleted_photos/{docId} {
+      allow read, write: if true;
+    }
+  }
+}
+
+
+

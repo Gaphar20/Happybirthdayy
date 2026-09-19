@@ -1,0 +1,6 @@
+{
+  "name": "Idris Abdulrazaq Oluwatoyin - Birthday Tribute",
+  "description": "A production-quality responsive tribute celebrating the milestone birthday of Alhaji Idris Abdulrazaq Oluwatoyin on September 19, featuring photo memories, heartfelt guestbook wishes, music player, and gift registry.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

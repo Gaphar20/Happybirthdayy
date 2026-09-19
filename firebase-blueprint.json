@@ -1,0 +1,117 @@
+{
+  "entities": {
+    "Wish": {
+      "title": "Birthday Wish",
+      "description": "Birthday wish submitted by family, friends, and well-wishers for Dad",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full name of the well-wisher",
+          "maxLength": 200
+        },
+        "relationship": {
+          "type": "string",
+          "description": "Relationship to the celebrant (e.g. Children, Sister, Friend)",
+          "maxLength": 100
+        },
+        "message": {
+          "type": "string",
+          "description": "Heartfelt birthday message and prayers for Dad",
+          "maxLength": 2000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of when the wish was submitted"
+        },
+        "approved": {
+          "type": "boolean",
+          "description": "Whether the wish is approved for public display"
+        },
+        "reactionsCount": {
+          "type": "number",
+          "description": "Number of love/heart reactions on this tribute wish"
+        },
+        "badge": {
+          "type": "string",
+          "description": "Optional tag/badge for relationship grouping",
+          "maxLength": 100
+        }
+      },
+      "required": ["name", "relationship", "message", "createdAt", "approved"]
+    },
+    "Photo": {
+      "title": "Dad Photograph",
+      "description": "Photographs of Dad celebrating milestones and cherished memories",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Title of the photograph"
+        },
+        "description": {
+          "type": "string",
+          "description": "Caption or story behind the photo"
+        },
+        "url": {
+          "type": "string",
+          "description": "Download URL or optimized image source"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category (Celebration, Milestone, Counsel, etc.)"
+        },
+        "location": {
+          "type": "string",
+          "description": "Location or event context"
+        },
+        "isHero": {
+          "type": "boolean",
+          "description": "Whether this photo is featured as the Hero portrait"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of upload"
+        }
+      },
+      "required": ["title", "url", "createdAt"]
+    },
+    "DeletedPhoto": {
+      "title": "Deleted Photo Tombstone",
+      "description": "Registry of deleted photo identifiers to ensure permanent removal",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Photo unique identifier"
+        },
+        "fullPath": {
+          "type": "string",
+          "description": "Photo storage full path"
+        },
+        "deletedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of deletion"
+        }
+      },
+      "required": ["id", "deletedAt"]
+    }
+  },
+  "firestore": {
+    "/wishes/{wishId}": {
+      "schema": "Wish",
+      "description": "Public collection of birthday tribute messages and prayers"
+    },
+    "/photos/{photoId}": {
+      "schema": "Photo",
+      "description": "Celebratory photographs collection for gallery and hero"
+    },
+    "/deleted_photos/{docId}": {
+      "schema": "DeletedPhoto",
+      "description": "Registry of deleted photos to ensure they never reappear"
+    }
+  }
+}
